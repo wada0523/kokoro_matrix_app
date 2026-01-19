@@ -5,9 +5,6 @@
 //
 // 保存：LocalStorage（「途中保存」「保存を復元」）
 
-let userEmail = null;
-let resultsSent = false;
-
 const QUESTIONS = [
   {
     "id": "A1-1",
@@ -675,10 +672,8 @@ function updateProgress() {
   if (answered === 54) {
     showResults();
 
-    if (!resultsSent && userEmail) {
-      resultsSent = true;
-      sendResultMail();
-    }
+    // 結果後メール入力を表示
+    qs("#emailAfterResult").classList.remove("hidden");
   }
 }
 
@@ -830,15 +825,12 @@ function resetAll() {
   if (!confirm("回答と保存をリセットします。よろしいですか？")) return;
 
   answers = {};
-  userEmail = null;
-  resultsSent = false;
-
   localStorage.removeItem(STORAGE_KEY);
 
-  qs("#emailStep").classList.remove("hidden");
-  qs("#progressCard").classList.add("hidden");
-  qs("#questions").classList.add("hidden");
+  qs("#progressCard").classList.remove("hidden");
+  qs("#questions").classList.remove("hidden");
   qs("#results").classList.add("hidden");
+  qs("#emailAfterResult").classList.add("hidden");
 
   renderQuestions();
 }
@@ -846,41 +838,44 @@ function resetAll() {
 // ===== events =====
 document.addEventListener("DOMContentLoaded", () => {
   renderQuestions();
+  qs("#btnSave").addEventListener("click", saveToStorage);
+  qs("#btnLoad").addEventListener("click", restoreFromStorage);
+  qs("#btnReset").addEventListener("click", resetAll);
+  qs("#btnCloseModal").addEventListener("click", closeModal);
 
-  qs("#emailForm").addEventListener("submit", (e) => {
+  qs("#emailAfterForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const email = qs("#emailInput").value.trim();
-    const error = qs("#emailError");
+    const input = qs("#emailAfterInput");
+    const error = qs("#emailAfterError");
+    const button = e.target.querySelector("button");
+
+    const email = input.value.trim();
 
     if (!email) {
       error.textContent = "メールアドレスを入力してください。";
       return;
     }
 
-    userEmail = email;
-
-    qs("#emailStep").classList.add("hidden");
-    qs("#progressCard").classList.remove("hidden");
-    qs("#questions").classList.remove("hidden");
-
     error.textContent = "";
+    button.disabled = true;
+    button.textContent = "送信中…";
+
+    await sendResultMail(email);
+
+    button.textContent = "送信完了 ✓";
   });
 
-  qs("#btnSave").addEventListener("click", saveToStorage);
-  qs("#btnLoad").addEventListener("click", restoreFromStorage);
-  qs("#btnReset").addEventListener("click", resetAll);
-  qs("#btnCloseModal").addEventListener("click", closeModal);
 });
 
-async function sendResultMail() {
+async function sendResultMail(email) {
   try {
     await fetch("/api/send-result", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        email: userEmail,
-        payload: buildResultPayload()
+        email,
+        payload: buildResultPayload(email)
       })
     });
   } catch (e) {
@@ -888,10 +883,10 @@ async function sendResultMail() {
   }
 }
 
-function buildResultPayload() {
+function buildResultPayload(email) {
   return {
     answeredAt: new Date().toISOString(),
-    email: userEmail,
+    email,
     answers
   };
 }
