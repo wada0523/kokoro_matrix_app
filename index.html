@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>心の三層構造インテグラル｜チェックアプリ</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="container">
+    <h1>心の三層構造インテグラル</h1>
+    <p class="lead">
+      2択の質問に順番に答えていくと、表（A）×裏（B）の照合結果（C）が3×3のグリッドで可視化されます。
+      回答結果のマスをクリックすると、表裏の問いと回答を確認できます。
+    </p>
+
+    <div class="toolbar">
+      <button id="btnSave" class="btn">途中保存</button>
+      <button id="btnLoad" class="btn btn-secondary">保存を復元</button>
+      <button id="btnReset" class="btn btn-ghost">リセット</button>
+      <span id="saveHint" class="hint" aria-live="polite"></span>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="emailStep" class="card">
+      <h2>メールアドレスの入力</h2>
+      <p class="muted">
+        診断結果をメールでお送りします。あとから入力する必要はありません。
+      </p>
+
+      <form id="emailForm">
+        <label class="emailInput">
+          <input
+            type="email"
+            id="emailInput"
+            placeholder="example@example.com"
+            required
+          />
+        </label>
+
+        <button type="submit" class="btn btn-primary">
+          診断を開始する
+        </button>
+
+        <div id="emailError" class="hint"></div>
+      </form>
+    </section>
+
+    <section class="card hidden" id="progressCard">
+      <div class="progressRow">
+        <div>
+          <div class="label">進捗</div>
+          <div class="value"><span id="answeredCount">0</span> / 54</div>
+        </div>
+        <div class="progressBar" aria-label="progress">
+          <div class="progressFill" id="progressFill" style="width:0%"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="questions" class="hidden"></section>
+
+    <section id="results" class="hidden">
+      <h2>回答グリッド（C）</h2>
+      <p class="muted">各マスをクリックすると、表裏の問いと回答が表示されます。</p>
+      <div id="resultGrids"></div>
+    </section>
+  </main>
+
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal__header">
+        <div>
+          <div id="modalTitle" class="modal__title">詳細</div>
+          <div id="modalSub" class="modal__sub"></div>
+        </div>
+        <button id="btnCloseModal" class="iconBtn" aria-label="閉じる">✕</button>
+      </div>
+      <div id="modalBody" class="modal__body"></div>
+    </div>
+  </div>
+
+  <footer class="container footer">
+    <small>※ローカル保存（LocalStorage）を使用します。ブラウザを変えると保存は引き継がれません。</small>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
