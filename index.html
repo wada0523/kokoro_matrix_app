@@ -42,26 +42,26 @@
         <p class="muted">各マスをクリックすると、表裏の問いと回答が表示されます。</p>
         <div id="resultGrids"></div>
       </section>
+
+      <section id="emailAfterResult" class="card hidden">
+        <h2>お疲れ様でした！</h2>
+        <p class="muted">
+          54問すべての回答が完了しました。<br />
+          診断結果をメールでお送りしますので、<br />
+          受け取れるメールアドレスをご入力ください。
+        </p>
+
+        <form id="emailAfterForm">
+          <label class="emailInput">
+            <input type="email" id="emailAfterInput" placeholder="example@example.com" required />
+          </label>
+
+          <button type="submit" class="btn btn-primary">診断結果をメールで受け取る</button>
+
+          <div id="emailAfterError" class="hint"></div>
+        </form>
+      </section>
     </main>
-
-    <section id="emailAfterResult" class="card hidden">
-      <h2>お疲れ様でした！</h2>
-      <p class="muted">
-        54問すべての回答が完了しました。<br />
-        診断結果をメールでお送りしますので、<br />
-        受け取れるメールアドレスをご入力ください。
-      </p>
-
-      <form id="emailAfterForm">
-        <label class="emailInput">
-          <input type="email" id="emailAfterInput" placeholder="example@example.com" required />
-        </label>
-
-        <button type="submit" class="btn btn-primary">診断結果をメールで受け取る</button>
-
-        <div id="emailAfterError" class="hint"></div>
-      </form>
-    </section>
 
     <div id="modal" class="modal" aria-hidden="true">
       <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
