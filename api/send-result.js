@@ -1,13 +1,6 @@
-import formData from "form-data";
-import Mailgun from "mailgun.js";
+import { Resend } from "resend";
 
-const mailgun = new Mailgun(formData);
-
-const client = mailgun.client({
-  username: "api",
-  key: process.env.MAILGUN_API_KEY,
-  url: process.env.MAILGUN_BASE_URL,
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -23,7 +16,7 @@ export default async function handler(req, res) {
 
     const answeredAt = new Date(payload.answeredAt).toLocaleString("ja-JP");
 
-    await client.messages.create(process.env.MAILGUN_DOMAIN, {
+    await resend.emails.send({
       from: `心の三層構造インテグラル <${process.env.FROM_EMAIL}>`,
       to: email,
       subject: "心の三層構造インテグラル｜診断結果",
@@ -45,7 +38,7 @@ ${JSON.stringify(payload.answers, null, 2)}
 
     return res.status(200).json({ ok: true });
   } catch (e) {
-    console.error("Mailgun send error:", e);
+    console.error("Resend send error:", e);
     return res.status(500).json({ error: "Send failed" });
   }
 }
