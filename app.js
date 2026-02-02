@@ -627,17 +627,13 @@ function renderQuestions() {
           <label class="choice">
             <input type="radio" name="${escapeHtml(name)}" value="neg" ${picked==="neg"?"checked":""} />
             <span class="cLabel">${escapeHtml(q.neg)}</span>
-            <span class="cTag">ネガ</span>
           </label>
 
           <label class="choice">
             <input type="radio" name="${escapeHtml(name)}" value="pos" ${picked==="pos"?"checked":""} />
             <span class="cLabel">${escapeHtml(q.pos)}</span>
-            <span class="cTag">ポジ</span>
           </label>
         </div>
-
-        <div class="smallMuted">※回答は「ネガ / ポジ」で記録されます。</div>
       `;
 
       card.addEventListener("change", (ev) => {
